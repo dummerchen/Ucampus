@@ -14,12 +14,13 @@ def change_config():
         print(i,'---->\n','当前配置名称为%s\n'%name,'是',cf.get('DATABASE',name))
     while 1:
         num=input('请输入要更改的配置文件序号|return退出')
-        new=input('输入新的该文件')
-        try:
-            cf.set('DATABASE',opt[num],new)
-        except:
-            break
         if num=='return':
+            break
+        new = input('输入新的该文件')
+        try:
+            cf.set('DATABASE',opt[int(num)],new)
+        except:
+            print('出错了！')
             break
     cf.write(open(path,'w'))
 
@@ -32,7 +33,7 @@ def get_config():
         password = input('缺失密码，请输入密码\n')
         cf.set('DATABASE','password',password)
     if cf.has_option('DATABASE','studentid')==False:
-        studentid = input('确实sid，请输入sid\n')
+        studentid = input('缺失sid，请输入sid\n')
         cf.set('DATABASE','studentid',studentid)
     cf.write(open(path, 'w'))
     l=[]
@@ -40,5 +41,6 @@ def get_config():
         l.append(cf.get('DATABASE', i))
     return l
 if __name__ == '__main__':
-    get_config()
+    l=get_config()
+    print(l)
     change_config()
