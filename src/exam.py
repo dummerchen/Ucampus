@@ -4,11 +4,13 @@
 import re
 import time
 from bs4 import BeautifulSoup
-allhandles = []
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
+
 
 # 存储所有label=green的值 ，包括选择题会出现两个一样的
 anslist=[]
-
 class Test(object):
     def __init__(self):
         self.username=''
@@ -38,11 +40,12 @@ class Test(object):
             pass
         return
     def get_answer(self):
-        try:
-            url=self.driver.find_element_by_tag_name('iframe').get_attribute('src')
-        except:
-            # 第二种登录方法
-            url=self.driver.current_url
+
+        anslist.clear()
+
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        ele=WebDriverWait(self.driver,1000).until(ec.presence_of_element_located((By.TAG_NAME,'iframe')))
+        url=ele.get_attribute('src')
         exercise = 'exerciseId=\d+&'
         sign = r'sign=\d*\w*&'
         exercise = re.findall(exercise, url)[0]
@@ -50,9 +53,11 @@ class Test(object):
         sid = 'studentId='+self.studentid
         url = 'https://uexercise.unipus.cn/itest/t/clsExam/rate/detail?%s%s%s' % (exercise, sign, sid)
 
-        self.driver.switch_to.window(allhandles[1])
+        js = 'window.open("https://baidu.com");'
+        self.driver.execute_script(js)
+        print('正在获取答案页面，请等待')
+        self.driver.switch_to.window(self.driver.window_handles[-1])
         self.driver.get(url)
-        self.driver.implicitly_wait(5)
         time.sleep(2)
         html = self.driver.page_source
         temp = self.driver.find_elements_by_class_name('green')
@@ -60,21 +65,21 @@ class Test(object):
             # 选择题读入和选词填空题读入都是一句话，其余的是一个单词|短语
             anslist.append((i.text).replace('(', '').replace(')', '').strip())
         # 判断是否关闭答案窗口
-        # if self.is_close_answerwindow:
-        #     self.driver.implicitly_wait(2)
-        #     self.driver.close()
-        self.driver.switch_to.window(allhandles[0])
+        if self.is_close_answerwindow=='1':
+            self.driver.close()
 
         soup=BeautifulSoup(html,'lxml')
         self.testlist=soup.find_all(name='div',attrs={'class','Test'})
+
+        print('答案获取成功')
         print(anslist)
-        return
+
+        return 0
     def solve(self):
-        self.driver.switch_to.window(allhandles[0])
+        self.driver.switch_to.window(self.driver.window_handles[0])
         try:
             self.driver.switch_to.frame('iframe')
         except:
-            # 第二种登录的特判
             pass
 
         # 有的还有个加载成功弹窗
@@ -85,8 +90,9 @@ class Test(object):
             pass
 
         # 得到所有题目的种类
-        self.driver.implicitly_wait(5)
         itest_section = self.driver.find_elements_by_class_name('itest-section')
+
+        print('正在准备自动答题')
 
         # 答案的位置，输入框的位置
         ansnum=-1
@@ -117,7 +123,6 @@ class Test(object):
             need_input_list=(question_set[i]).find_elements_by_tag_name('input')
             for j in range(0,len(need_input_list)):
                 ansnum+=1
-                self.driver.implicitly_wait(4)
                 self.driver.execute_script("arguments[0].value=arguments[1]", need_input_list[j],anslist[ansnum])
         return ansnum
     def xuanci_tiankong(self,th,section,ansnum):
@@ -139,12 +144,10 @@ class Test(object):
             for word in al:
                 dic[word.text[4:]]=word.text[0]
 
-            print(dic)
             # 得到每个大题需要填的空
             need_input_list=(question_set[i]).find_elements_by_tag_name('input')
             for j in range(0,len(need_input_list)):
                 ansnum+=1
-                self.driver.implicitly_wait(4)
                 self.driver.execute_script("arguments[0].value=arguments[1]", need_input_list[j],dic[anslist[ansnum]])
         return ansnum
     def multiple_choices(self,th,section,ansnum):
@@ -165,8 +168,6 @@ class Test(object):
                 for step,k in enumerate(qoo):
                     print(ansnum,'$$$$',anslist[ansnum])
                     if eval(k)==(ord(anslist[ansnum][0])-ord('A')):
-                        self.driver.implicitly_wait(4)
-                        #print(need_input_list[j*4+step].text)
                         (need_input_list[j*4+step]).click()
                         break
         return ansnum
@@ -180,10 +181,10 @@ class Test(object):
     def submint(self,):
         # 前面已经进入了iframe里面就不需要再进了
         # 不同course button不同，以后再改吧
-        print(type(self.is_auto_submit))
         if self.is_auto_submit=='1':
             self. driver.find_element_by_xpath('//*[@id="submit-answer"]').click()
             # self.driver.quit()
+        print('答题完成,请提交')
 def check(text):
     '''
         判断这个部分的类型 单选|多选|填空
