@@ -3,14 +3,21 @@
 # @Time : 2020/5/22 19:33
 import re
 import time
+import random
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
-
+import config
 
 # 存储所有label=green的值 ，包括选择题会出现两个一样的
 anslist=[]
+
+# 题号
+def wait():
+    minn=int(config.cf.get('DATABASE','wtmin'))
+    maxn=int(config.cf.get('DATABASE','wtmax'))
+    time.sleep(random.uniform(minn,maxn))
 class Test(object):
     def __init__(self):
         self.username=''
@@ -72,8 +79,6 @@ class Test(object):
         self.testlist=soup.find_all(name='div',attrs={'class','Test'})
 
         print('答案获取成功')
-        print(anslist)
-
         return 0
     def solve(self):
         self.driver.switch_to.window(self.driver.window_handles[0])
@@ -122,6 +127,7 @@ class Test(object):
             # 得到每个大题需要填的空
             need_input_list=(question_set[i]).find_elements_by_tag_name('input')
             for j in range(0,len(need_input_list)):
+                wait()
                 ansnum+=1
                 self.driver.execute_script("arguments[0].value=arguments[1]", need_input_list[j],anslist[ansnum])
         return ansnum
@@ -132,6 +138,7 @@ class Test(object):
         :param ansnum: 到第几个答案
         :return: ansnum
         '''
+
         # 因为wordlist这是在答案页面存的所以有个th来找这是第几个section里面的，然后再找wordlist...其他的th没用懒得删了
         # 虽然感觉可以写简单
         wordlist_tot=self.testlist[th].select("div [class='Question-Conversation'] ul")
@@ -147,6 +154,7 @@ class Test(object):
             # 得到每个大题需要填的空
             need_input_list=(question_set[i]).find_elements_by_tag_name('input')
             for j in range(0,len(need_input_list)):
+                wait()
                 ansnum+=1
                 self.driver.execute_script("arguments[0].value=arguments[1]", need_input_list[j],dic[anslist[ansnum]])
         return ansnum
@@ -156,17 +164,20 @@ class Test(object):
         :param section:
         :return:ansnum
         '''
+        global jishuqi
+
         question_set = section.find_elements_by_class_name('itest-ques-set')
         for i, wordlist in enumerate(question_set):
             # 得到每个大题需要填的空|选择题的空是一般题的四倍
+
             need_input_list = (question_set[i]).find_elements_by_tag_name('input')
             l=len(need_input_list)
             for j in range(0, int(l/4)):
+                wait()
                 ansnum += 2
                 qoo=need_input_list[j*4].get_attribute('qoo').replace('[','').replace(']','').replace(',','')
                 # qoo是随机打乱序列 qoo[原pos]=现pos 现在先用循环写着，以后再优化
                 for step,k in enumerate(qoo):
-                    print(ansnum,'$$$$',anslist[ansnum])
                     if eval(k)==(ord(anslist[ansnum][0])-ord('A')):
                         (need_input_list[j*4+step]).click()
                         break

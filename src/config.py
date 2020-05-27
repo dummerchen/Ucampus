@@ -3,10 +3,10 @@
 # @Time : 2020/5/20 8:52
 import configparser
 import os
-
+from selenium import webdriver
 cf = configparser.ConfigParser()
-path=os.path.abspath('..')+'\config.ini'
-cf.read(path)
+path=os.path.abspath('..')
+cf.read(path+'/config.ini')
 def change_config():
     opt=cf.options('DATABASE')
 
@@ -22,25 +22,46 @@ def change_config():
         except:
             print('出错了！')
             break
-    cf.write(open(path,'w'))
+    cf.write(open(path+'/config.ini','w'))
+def check_cd():
+    if cf.get('DATABASE','v_chromedriver')=='':
+        for num in range(80,84):
+            try:
+                pathcd=path+'/chromedriver/chromedriver_%s.exe'%(num)
+                # 如果有配置环境变量可以把这个改为
+                #driver=webdriver.Chrome()
+                driver = webdriver.Chrome(pathcd)
+
+                cf.set('DATABASE','v_chromedriver',str(num))
+                cf.write(open(path + '/config.ini', 'w'))
+                return driver
+            except:
+                pass
+    else:
+        pathcd = path + '/chromedriver/chromedriver_%s.exe' %cf.get('DATABASE','v_chromedriver')
+        # 这里也要改
+        #driver = webdriver.Chrome()
+        driver = webdriver.Chrome(pathcd)
+        return driver
+    print('请确认支持的版本或手动配置chrome相应的chromedriver版本到chromedriver文件夹')
 
 def get_config():
 
-    if cf.has_option('DATABASE','username')==False:
+    if cf.get('DATABASE','username')=='':
         username = input('缺失账号，请输入账号\n')
         cf.set('DATABASE','username',username)
-    if cf.has_option('DATABASE','password')==False:
+    if cf.get('DATABASE','password')=='':
         password = input('缺失密码，请输入密码\n')
         cf.set('DATABASE','password',password)
-    if cf.has_option('DATABASE','studentid')==False:
+    if cf.get('DATABASE','studentid')=='':
         studentid = input('缺失sid，请输入sid\n')
         cf.set('DATABASE','studentid',studentid)
-    cf.write(open(path, 'w'))
+    cf.write(open(path+'/config.ini', 'w'))
     l=[]
     for i in cf.options('DATABASE'):
         l.append(cf.get('DATABASE', i))
-    return l
+    return l[:5]
 if __name__ == '__main__':
     l=get_config()
     print(l)
-    change_config()
+    check_cd()
