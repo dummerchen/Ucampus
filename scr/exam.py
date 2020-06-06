@@ -66,7 +66,7 @@ class Test(object):
         print('正在获取答案页面，请等待')
         self.driver.switch_to.window(self.driver.window_handles[-1])
         self.driver.get(url)
-        time.sleep(2)
+        time.sleep(4)
         html = self.driver.page_source
         temp = self.driver.find_elements_by_class_name('green')
         for i in temp:

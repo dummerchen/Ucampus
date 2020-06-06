@@ -3,6 +3,7 @@
 # @Time : 2020/5/20 8:52
 import configparser
 import os
+import re
 from selenium import webdriver
 cf = configparser.ConfigParser()
 path=os.path.abspath('..')
@@ -54,7 +55,7 @@ def get_config():
         password = input('缺失密码，请输入密码\n')
         cf.set('DATABASE','password',password)
     if cf.get('DATABASE','studentid')=='':
-        studentid = input('缺失sid，请输入sid\n')
+        studentid = re.findall('\d+',input('缺失sid，请输入sid\n'))[0]
         cf.set('DATABASE','studentid',studentid)
     cf.write(open(path+'/config.ini', 'w'))
     l=[]
