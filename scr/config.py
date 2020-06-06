@@ -60,7 +60,7 @@ def get_config():
     l=[]
     for i in cf.options('DATABASE'):
         l.append(cf.get('DATABASE', i))
-    return l[:5]
+    return l[:6]
 if __name__ == '__main__':
     l=get_config()
     print(l)

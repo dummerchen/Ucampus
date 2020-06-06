@@ -29,6 +29,7 @@ class Test(object):
         # 但是四六级不需要sid也可以
         # studentid在个人中心页面
         self.testlist=[]
+        self.auto_fill_answer=None
         self.is_close_answerwindow=None
         self.is_auto_submit=None
     def start_exam(self):
@@ -79,8 +80,10 @@ class Test(object):
         self.testlist=soup.find_all(name='div',attrs={'class','Test'})
 
         print('答案获取成功')
+
         return 0
     def solve(self):
+
         self.driver.switch_to.window(self.driver.window_handles[0])
         try:
             self.driver.switch_to.frame('iframe')
@@ -96,8 +99,6 @@ class Test(object):
 
         # 得到所有题目的种类
         itest_section = self.driver.find_elements_by_class_name('itest-section')
-
-        print('正在准备自动答题')
 
         # 答案的位置，输入框的位置
         ansnum=-1
