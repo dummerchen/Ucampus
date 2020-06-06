@@ -15,8 +15,8 @@ anslist=[]
 
 # 题号
 def wait():
-    minn=int(config.cf.get('DATABASE','wtmin'))
-    maxn=int(config.cf.get('DATABASE','wtmax'))
+    minn=float(config.cf.get('DATABASE','wtmin'))
+    maxn=float(config.cf.get('DATABASE','wtmax'))
     time.sleep(random.uniform(minn,maxn))
 class Test(object):
     def __init__(self):
