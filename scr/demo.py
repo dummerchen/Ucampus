@@ -66,7 +66,8 @@ def main():
             else:
                 print('已选择手动答题，请手动答题时不要关闭程序')
         except:
-            print('sid可能错误,请检查sid是否正确匹配(一般是7位数字)\n如果确定是搜sid:出现的后面的数字，请稍后重试或联系作者')
+            print('sid可能错误,请检查sid是否正确匹配(一般是7位数字)\n如果答案页面有全部答案则可以刷新再来一次或先做别的测验，软件不太稳定\n')
+            time.sleep(4)
 
 if __name__=='__main__':
     os.system('cls')

@@ -57,9 +57,13 @@ def get_config():
     if cf.get('DATABASE','studentid')=='':
         studentid = re.findall('\d+',input('缺失sid，请输入sid\n'))[0]
         cf.set('DATABASE','studentid',studentid)
+
     cf.write(open(path+'/config.ini', 'w'))
     l=[]
     for i in cf.options('DATABASE'):
+        if i == 'studentid':
+            studentid = re.findall('\d+', cf.get('DATABASE',i))[0]
+            cf.set('DATABASE', 'studentid', studentid)
         l.append(cf.get('DATABASE', i))
     return l[:6]
 if __name__ == '__main__':
