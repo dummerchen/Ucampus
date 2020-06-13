@@ -46,6 +46,12 @@ def check_cd():
         return driver
     print('请确认支持的版本或手动配置chrome相应的chromedriver版本到chromedriver文件夹')
 
+def get_sid(driver):
+    text=driver.page_source
+    studentid = re.findall('sid:\d+',text)[0].replace('sid:','')
+    cf.set('DATABASE','studentid',str(studentid))
+    cf.write(open(path + '/config.ini', 'w'))
+    return studentid
 def get_config():
 
     if cf.get('DATABASE','username')=='':
@@ -54,16 +60,10 @@ def get_config():
     if cf.get('DATABASE','password')=='':
         password = input('缺失密码，请输入密码\n')
         cf.set('DATABASE','password',password)
-    if cf.get('DATABASE','studentid')=='':
-        studentid = re.findall('\d+',input('缺失sid，请输入sid\n'))[0]
-        cf.set('DATABASE','studentid',studentid)
 
     cf.write(open(path+'/config.ini', 'w'))
     l=[]
     for i in cf.options('DATABASE'):
-        if i == 'studentid':
-            studentid = re.findall('\d+', cf.get('DATABASE',i))[0]
-            cf.set('DATABASE', 'studentid', studentid)
         l.append(cf.get('DATABASE', i))
     return l[:6]
 if __name__ == '__main__':
