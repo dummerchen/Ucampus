@@ -26,18 +26,25 @@ def change_config():
     cf.write(open(path+'/config.ini','w'))
 def check_cd():
     if cf.get('DATABASE','v_chromedriver')=='':
-        for num in range(80,84):
+        file_name=os.listdir(path+'\\chromedriver')
+        file_name=file_name[::-1]
+
+        print(file_name)
+        for name in file_name:
             try:
-                pathcd=path+'/chromedriver/chromedriver_%s.exe'%(num)
+                pathcd=path+'\\chromedriver\\'+name
                 # 如果有配置环境变量可以把这个改为
                 #driver=webdriver.Chrome()
+                print(pathcd)
                 driver = webdriver.Chrome(pathcd)
-
-                cf.set('DATABASE','v_chromedriver',str(num))
+                # print(name)
+                # print(re.findall('\d+',name))
+                cf.set('DATABASE','v_chromedriver',re.findall('\d+',name)[0])
                 cf.write(open(path + '/config.ini', 'w'))
                 return driver
-            except:
-                pass
+            except Exception as e:
+                print(e)
+
     else:
         pathcd = path + '/chromedriver/chromedriver_%s.exe' %cf.get('DATABASE','v_chromedriver')
         # 这里也要改

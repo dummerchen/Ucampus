@@ -28,8 +28,8 @@ def login():
         driver.find_element_by_class_name('layui-layer-btn0').click()
         driver.switch_to.window(driver.window_handles[-1])
         driver.close()
-    except:
-        pass
+    except Exception as e:
+        print('手动登录后请重启程序',e)
     driver.switch_to.window(driver.window_handles[0])
     return driver
 
@@ -43,22 +43,28 @@ def main():
     flag=input('是否要更改配置文件(config.ini) y|n (回车默认不更改')
     if flag=='y':
         config.change_config()
-
+    else:
+        pass
     test.is_auto_submit,test.is_close_answerwindow,test.username,test.password,test.studentid,test.auto_fill_answer=config.get_config()
+    print(test.username,test.password,test.studentid)
     try:
         driver = login()
         test.driver = driver
         if test.studentid=='':
             try:
-                test.studentid=config.get_sid(driver)
+                while 1:
+                    print('如果一直在获取可以退出并重启程序')
+                    test.studentid=config.get_sid(driver)
+                    print(test.studentid)
             except:
                 print('未找到形如sid:XXX,请手动配置或者因u版本已更新本软件已经不支持，欢迎反馈')
                 time.sleep(4)
                 return
-    except:
-        print('可能账号密码错误，请检查配置文件,后再重新运行程序')
-        time.sleep(5)
-        return
+    except Exception as e:
+        print('错误信息')
+        print(e)
+        print('可能账号密码错误或需要验证码，请手动登录，如果程序退出请重启程序(获取cookie)')
+
     while 1:
 
         os.system('cls')
