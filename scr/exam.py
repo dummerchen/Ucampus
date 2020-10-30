@@ -9,10 +9,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 import config
+from log import Loggers
 
 # 存储所有label=green的值 ，包括选择题会出现两个一样的
 anslist=[]
-
+loggers=Loggers()
 # 题号
 def wait():
     minn=float(config.cf.get('DATABASE','wtmin'))
@@ -65,11 +66,13 @@ class Test(object):
         self.driver.execute_script(js)
         print('正在获取答案页面，请等待')
         self.driver.switch_to.window(self.driver.window_handles[-1])
-        self.driver.get(url)
+        try:
+            self.driver.get(url)
         #怎么弄有时候都会加载不全...佛了
-        time.sleep(3)
-        self.driver.implicitly_wait(5)
-
+            time.sleep(3)
+            self.driver.implicitly_wait(5)
+        except Exception as e:
+            loggers.logger.exception(e)
         html = self.driver.page_source
         temp = self.driver.find_elements_by_class_name('green')
         for i in temp:
@@ -82,7 +85,8 @@ class Test(object):
         soup=BeautifulSoup(html,'lxml')
         self.testlist=soup.find_all(name='div',attrs={'class','Test'})
 
-        print('答案获取成功')
+        print('成功获取答案')
+        loggers.logger.info('获取答案成功')
 
         return 0
     def solve(self):

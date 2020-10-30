@@ -5,6 +5,9 @@ import configparser
 import os
 import re
 from selenium import webdriver
+from log import Loggers
+
+loggers=Loggers()
 cf = configparser.ConfigParser()
 path=os.path.abspath('..')
 cf.read(path+'/config.ini')
@@ -43,7 +46,7 @@ def check_cd():
                 cf.write(open(path + '/config.ini', 'w'))
                 return driver
             except Exception as e:
-                print(e)
+                loggers.logger.info(e)
 
     else:
         pathcd = path + '/chromedriver/chromedriver_%s.exe' %cf.get('DATABASE','v_chromedriver')

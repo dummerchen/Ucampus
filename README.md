@@ -1,16 +1,18 @@
 ## 程序说明
 
-~~*为了偷懒写了这个程序*~~
+程序目的主要还是练手自动化  ~~*顺便偷懒*,~~
 
-### v3.2.0_alpha
+~~答案接口：https://uexercise.unipus.cn/itest/t/clsExam/rate/detail?%s%s%s' % (exercise, sign, sid) sid是登录之后页面pagesource里的studentid:~~
+
+### v1.3.2_alpha
 
 迫于总是有人不会手动获取sid然后私信的无奈，增加了自动获取sid,现在只需要填写账号密码了
 
-不过还请手动配置chromedriver
+不过还请手动配置 <a href="https://npm.taobao.org/mirrors/chromedriver/" target="__blank">chromedriver</a>
+
+选择自己谷歌相应版本的chromedriver然后把exe文件移动到chromedriver文件夹下，**并改成相应格式的名字**
 
 
-
-**支持的登录方式：手机账号密码登录**
 
 **支持的 course：**
 
@@ -70,52 +72,6 @@ win10 x64
 最后记得退出程序
 
 
-
-## 版本历史
-
-### v 3.1.2_alpha
-
-增加了可选是否自动答题功能（有些人总是怕自动答题被查~~设置间隔时间功能白废了/(ㄒoㄒ)/~~）
-
-所以就加了可设置只显示答案页面，手动答题（手动答题的时候不要关闭exe程序，因为关闭程序的话网页也会关闭）
-
-### v 3.1.1_alpha
-
-修改了一些不必要的输出和bug，增加了exe文件(dist里面)，为方便人使用也一并上传了程序压缩包~~在rar_branch~~
-
-### v 3.1.0_alpha
-
-*不再需要配置chromedriver，不过只支持chrome版本80,81,83*
-
-*版本低于80的还需自行下载driver并按格式添加到chromedriver文件夹*
-
-*增加了答题间隔时间,默认间隔 0s*
-
-### v 3.0.0_alpha
-
-不用再输入url可以直接进入支持的测试然后再按任意键开始答题
-
-*答题完毕后也无需关闭窗口重新运行程序，可在主窗口继续选择 test 进入测验，在程序里确认开始后自动答题（请不要多次确认！）*
-
-仍需要自行配置selenium和chromedriver环境
-
-### v 2.0.0_alpha
-
-需要自行配置selenium和chromedriver环境
-
-需要自行输入测验的 url
-
-支持多种题型混合的测试支持题型增加到
-
-- **纯填空:** 复合式听写|仔细阅读|长篇阅读
-- **对应选项填空：**词汇理解
-- **选择题:**短对话，长对话，新闻报道
-
-### v 1.0.0_alpha
-
-需要自行配置selenium和chromedriver环境
-
-只支持只有选词填空题型的测试
 
 ## 特别感谢
 
