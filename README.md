@@ -4,7 +4,7 @@
 
 ~~答案接口：https://uexercise.unipus.cn/itest/t/clsExam/rate/detail?%s%s%s' % (exercise, sign, sid) sid是登录之后页面pagesource里的studentid:~~
 
-### v1.3.2_alpha
+
 
 迫于总是有人不会手动获取sid然后私信的无奈，增加了自动获取sid,现在只需要填写账号密码了
 
