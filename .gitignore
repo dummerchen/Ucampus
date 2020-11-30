@@ -1,0 +1,6 @@
+config.ini
+*.log
+log/
+*.txt
+build/
+*.spec
