@@ -32,7 +32,6 @@ def check_cd():
         file_name=os.listdir(path+'\\chromedriver')
         file_name=file_name[::-1]
 
-        print(file_name)
         for name in file_name:
             try:
                 pathcd=path+'\\chromedriver\\'+name
@@ -57,6 +56,7 @@ def check_cd():
     print('请确认支持的版本或手动配置chrome相应的chromedriver版本到chromedriver文件夹')
 
 def get_sid(driver):
+    driver.switch_to.window(driver.window_handles[0])
     text=driver.page_source
     studentid = re.findall('sid:\d+',text)[0].replace('sid:','')
     cf.set('DATABASE','studentid',str(studentid))

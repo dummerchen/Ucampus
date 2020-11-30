@@ -41,7 +41,10 @@ test=exam.Test()
 
 def main():
 
-    print('如果答案页面是空白，请截图config.ini文件内容+测试链接 反馈bug\n（自古readme没人看，只好写这了）')
+    print('如果有问题请先看readme')
+    print('如果出现验证码检查是否账号密码错误，把窗口关闭并重新打开软件，直到没有验证码')
+    print('获取答案后自动答题将会有7s左右的等待时间，不要退出！！！')
+    print('如果还有问题 请将log文件夹下的最新文件+测试链接 反馈bug\n（自古readme没人看，只好写这了）')
     print('更改用户密码建议到config.ini')
     print('-' * 40)
     flag=input('是否要更改配置文件(config.ini) y|n (回车默认不更改')
@@ -62,6 +65,7 @@ def main():
                 test.studentid=config.get_sid(driver)
                 if test.studentid:
                     loggers.logger.info(test.studentid)
+                    break
                 else:
                     print('如果一直在获取可以退出并重启程序')
         except Exception as e:
