@@ -5,9 +5,7 @@
 ~~答案接口：https://uexercise.unipus.cn/itest/t/clsExam/rate/detail?%s%s%s' % (exercise, sign, sid) sid是登录之后页面pagesource里的studentid:~~
 
 
-
-迫于总是有人不会手动获取sid然后私信的无奈，增加了自动获取sid,现在只需要填写账号密码了
-
+sid获取> 主页面里面，右键检查，在html里面ctrl+f搜索sid:,后面出现的数字就是了
 不过还请手动配置 <a href="https://npm.taobao.org/mirrors/chromedriver/" target="__blank">chromedriver</a>
 
 选择自己谷歌相应版本的chromedriver然后把exe文件移动到chromedriver文件夹下，**并改成相应格式的名字**
